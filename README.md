@@ -16,17 +16,16 @@ This cookbook provides resources for managing Windows Firewall using the netsh u
 
 #### Actions
 
-- `:disable`: disable an existing profile
-- `:enable`: enable an existing profile and set policy
+- `:disable`: disable a firewall profile
+- `:enable`: enable a firewall profile and set inbound/outbound policy; this is the default action
 
 #### Parameters
 
 - `name`: name attribute; specify `all`, `domain`, `private`, or `public`
 - `inbound`: `:allow` or `:block` (default)
 - `outbound`: `:allow` (default) or `:block`
-- `profile`: `:any` (default), `:domain`, `:private`, or `:public`
 
-#### Examples
+#### Example
 
 ```ruby
 netsh_firewall_profile 'all' do
