@@ -1,0 +1,10 @@
+CyclomaticComplexity:
+  Max: 10
+LineLength:
+  Max: 110
+Metrics/AbcSize:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+MethodLength:
+  Enabled: false
