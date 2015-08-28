@@ -19,6 +19,6 @@
 actions :disable, :enable
 default_action :enable
 
-attribute :name, kind_of: String, name_attribute: true, equal_to: ['all', 'domain', 'private', 'public']
+attribute :name, kind_of: String, name_attribute: true, equal_to: %w(all domain private public)
 attribute :inbound, kind_of: Symbol, default: :block, equal_to: [:allow, :block]
 attribute :outbound, kind_of: Symbol, default: :allow, equal_to: [:allow, :block]

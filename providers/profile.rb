@@ -33,7 +33,7 @@ action :enable do
     only_if { policy_needs_update? }
   end
   new_resource.updated_by_last_action(true) if state.updated_by_last_action? ||
-    policy.updated_by_last_action?
+                                               policy.updated_by_last_action?
 end
 
 def firewall_policy

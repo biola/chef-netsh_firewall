@@ -119,9 +119,14 @@ def rule_args
   args['remoteip'] = cidr(new_resource.remoteip)
   args['remoteport'] = new_resource.remoteport
   args['protocol'] = new_resource.protocol.to_s
-  args['action'] = new_resource.action.join(',').to_s
   args['profile'] = new_resource.profile.to_s
   args['program'] = "\"#{new_resource.program}\"" if new_resource.program
+  # There can only be one action
+  if new_resource.action.is_a? Array
+    args['action'] = new_resource.action.first.to_s
+  elsif new_resource.action.is_a? Symbol
+    args['action'] = new_resource.action.to_s
+  end
   args
 end
 

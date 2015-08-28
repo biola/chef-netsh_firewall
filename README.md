@@ -12,7 +12,7 @@ This cookbook provides resources for managing Windows Firewall using the netsh u
 
 ## Resources
 
-### firewall_profile
+### netsh_firewall_profile
 
 #### Actions
 
@@ -34,7 +34,7 @@ netsh_firewall_profile 'all' do
 end
 ```
 
-### firewall_rule
+### netsh_firewall_rule
 
 #### Actions
 
