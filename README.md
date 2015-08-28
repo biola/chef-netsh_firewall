@@ -1,6 +1,6 @@
 # netsh_firewall
 
-This cookbook provides a resource for creating and managing firewall rules on Windows using the netsh utility. See https://technet.microsoft.com/en-us/library/Dd734783.aspx for details on configuring Windows Firewall using netsh.
+This cookbook provides resources for managing Windows Firewall using the netsh utility. See https://technet.microsoft.com/en-us/library/Dd734783.aspx for details on configuring Windows Firewall using netsh.
 
 ## Platforms
 
@@ -11,6 +11,29 @@ This cookbook provides a resource for creating and managing firewall rules on Wi
 * Windows Server 2012, 2012 R2
 
 ## Resources
+
+### firewall_profile
+
+#### Actions
+
+- `:disable`: disable an existing profile
+- `:enable`: enable an existing profile and set policy
+
+#### Parameters
+
+- `name`: name attribute; specify `any`, `domain`, `private`, or `public`
+- `inbound`: `:allow` or `:block` (default)
+- `outbound`: `:allow` (default) or `:block`
+- `profile`: `:any` (default), `:domain`, `:private`, or `:public`
+
+#### Examples
+
+```ruby
+netsh_firewall_profile 'all' do
+  inbound :block
+  outbound :allow
+end
+```
 
 ### firewall_rule
 

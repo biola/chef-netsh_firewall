@@ -15,3 +15,8 @@ netsh_firewall_rule 'Splunk (TCP-Out)' do
   remoteip '192.168.1.11'
   remoteport '9997'
 end
+
+netsh_firewall_profile 'all' do
+  inbound :block
+  outbound :allow
+end
