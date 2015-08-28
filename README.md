@@ -21,7 +21,7 @@ This cookbook provides resources for managing Windows Firewall using the netsh u
 
 #### Parameters
 
-- `name`: name attribute; specify `any`, `domain`, `private`, or `public`
+- `name`: name attribute; specify `all`, `domain`, `private`, or `public`
 - `inbound`: `:allow` or `:block` (default)
 - `outbound`: `:allow` (default) or `:block`
 - `profile`: `:any` (default), `:domain`, `:private`, or `:public`
