@@ -10,6 +10,12 @@ This cookbook provides resources for managing Windows Firewall using the netsh u
 * Windows Server 2008, 2008 R2
 * Windows Server 2012, 2012 R2
 
+## Recipes
+
+### default
+
+If the `['netsh_firewall']['disable_unmanaged']` attribute is set to true this recipe will disable firewall rules that are not managed with Chef or whitelisted using attributes. Use at your own risk.
+
 ## Resources
 
 ### netsh_firewall_profile

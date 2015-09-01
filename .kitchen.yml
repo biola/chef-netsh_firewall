@@ -15,3 +15,5 @@ suites:
       - recipe[firewall_test::default]
     attributes:
       dev_mode: true
+      netsh_firewall:
+        disable_unmanaged_rules: true

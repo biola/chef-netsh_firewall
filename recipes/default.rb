@@ -15,3 +15,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# Disable firewall rules that are not whitelisted or managed with Chef
+# Put this in a ruby block to ensure the resource collection is complete
+enabled_rules = parse_enabled_rules
+ruby_block 'disable unmanaged rules' do
+  block do
+    resource_list = run_context.resource_collection.keys
+    enabled_rules.each do |rule|
+      # Ignore rules that are whitelisted
+      next if node['netsh_firewall']['group_whitelist'].include? rule['Grouping']
+      next if node['netsh_firewall']['rule_whitelist'].include? rule['Rule Name']
+      # Ignore rules in the resource collection
+      next if resource_list.include? "netsh_firewall_rule[#{rule['Rule Name']}]"
+      r = Chef::Resource::NetshFirewallRule.new(rule['Rule Name'], run_context)
+      r.run_action :disable
+    end
+  end
+  only_if { node['netsh_firewall']['disable_unmanaged_rules'] }
+end

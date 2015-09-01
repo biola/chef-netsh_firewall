@@ -3,6 +3,10 @@
 # Recipe:: default
 #
 
+# Disable unmanaged rules
+include_recipe 'netsh_firewall::default'
+
+# Firewall rule definitions
 netsh_firewall_rule 'Windows Remote Management (HTTPS-In)' do
   description 'Test firewall rule #1'
   localport '5986'
