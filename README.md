@@ -14,7 +14,13 @@ This cookbook provides resources for managing Windows Firewall using the netsh u
 
 ### default
 
-If the `['netsh_firewall']['disable_unmanaged']` attribute is set to true this recipe will disable firewall rules that are not managed with Chef or whitelisted using attributes. Use at your own risk.
+If the `['netsh_firewall']['disable_unmanaged_rules']` attribute is set to true this recipe will disable firewall rules that are not managed with Chef or whitelisted using attributes. Use at your own risk.
+
+## Attributes
+
+* `['netsh_firewall']['disable_unmanaged_rules']` - disable unmanaged firewall rules; defaults to false
+* `['netsh_firewall']['group_whitelist']` - an array of firewall groups to leave enabled, e.g. 'Core Networking'
+* `['netsh_firewall']['rule_whitelist']` - an array of firewall names to leave enabled, e.g. 'Remote Desktop (TCP-In)'
 
 ## Resources
 
