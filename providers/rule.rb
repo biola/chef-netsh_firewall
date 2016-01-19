@@ -115,9 +115,9 @@ def rule_args
   args['description'] = "\"#{new_resource.description}\"" if new_resource.description
   args['dir'] = new_resource.dir.to_s
   args['localip'] = cidr(new_resource.localip)
-  args['localport'] = new_resource.localport
+  args['localport'] = new_resource.localport unless new_resource.protocol.to_s.include? 'icmp'
   args['remoteip'] = cidr(new_resource.remoteip)
-  args['remoteport'] = new_resource.remoteport
+  args['remoteport'] = new_resource.remoteport unless new_resource.protocol.to_s.include? 'icmp'
   args['protocol'] = new_resource.protocol.to_s
   args['profile'] = new_resource.profile.to_s
   args['program'] = "\"#{new_resource.program}\"" if new_resource.program

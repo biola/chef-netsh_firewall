@@ -20,6 +20,13 @@ netsh_firewall_rule 'Splunk (TCP-Out)' do
   remoteport '9997'
 end
 
+netsh_firewall_rule 'Ping (ICMP-In)' do
+  description 'Test firewall rule #3'
+  dir :in
+  profile :domain
+  protocol :icmpv4
+end
+
 netsh_firewall_profile 'all' do
   inbound :block
   outbound :allow
