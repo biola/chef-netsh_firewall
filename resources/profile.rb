@@ -2,7 +2,7 @@
 # Cookbook Name:: netsh_firewall
 # Resource:: profile
 #
-# Copyright 2015 Biola University
+# Copyright 2018 Biola University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,6 @@
 actions :disable, :enable
 default_action :enable
 
-attribute :name, kind_of: String, name_attribute: true, equal_to: %w(all domain private public)
+attribute :name, kind_of: String, name_attribute: true, equal_to: %w[all domain private public]
 attribute :inbound, kind_of: Symbol, default: :block, equal_to: [:allow, :block]
 attribute :outbound, kind_of: Symbol, default: :allow, equal_to: [:allow, :block]

@@ -2,7 +2,7 @@
 # Cookbook Name:: netsh_firewall
 # Provider:: rule
 #
-# Copyright 2015 Biola University
+# Copyright 2018 Biola University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -90,21 +90,18 @@ end
 # Parse netsh output for a rule
 # Return a hash with keys and values in lowercase
 def parse_rule_output
-  if rule_exists?
-    rule = {}
-    cmd = Mixlib::ShellOut.new("netsh advfirewall firewall show rule name=\"#{new_resource.name}\" verbose")
-    cmd.run_command
-    cmd.stdout.lines("\r\n") do |line|
-      next if line.empty? || line =~ /^Ok/ || line =~ /^-/
-      k, v = line.split(': ')
-      v = 'any' if k == 'Profiles' && v.strip == 'Domain,Private,Public'
-      k = 'name' if k.downcase == 'rule name'
-      rule[cmd_map(k.downcase.chomp)] = v.strip.downcase unless v.nil?
-    end
-    rule
-  else
-    fail "Firewall rule '#{new_resource.name}' not found."
+  raise "Firewall rule '#{new_resource.name}' not found." unless rule_exists?
+  rule = {}
+  cmd = Mixlib::ShellOut.new("netsh advfirewall firewall show rule name=\"#{new_resource.name}\" verbose")
+  cmd.run_command
+  cmd.stdout.lines("\r\n") do |line|
+    next if line.empty? || line =~ /^Ok/ || line =~ /^-/
+    k, v = line.split(': ')
+    v = 'any' if k == 'Profiles' && v.strip == 'Domain,Private,Public'
+    k = 'name' if k.casecmp('Rule Name')
+    rule[cmd_map(k.downcase.chomp)] = v.strip.downcase unless v.nil?
   end
+  rule
 end
 
 # Create a hash of resource properties
@@ -146,7 +143,7 @@ def rule_needs_update?
   diff = []
   new_rule.each do |k, v|
     diff << k unless existing_rule.key? k
-    diff << k if v.downcase.gsub('"', '') != existing_rule[k]
+    diff << k if v.downcase.delete('"') != existing_rule[k]
   end
   diff << 'enabled' unless existing_rule['enabled'] == 'yes'
   Chef::Log.debug("Updated parameters: #{diff}") unless diff.empty?
