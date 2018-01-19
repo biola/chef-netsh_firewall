@@ -28,7 +28,8 @@ ruby_block 'disable unmanaged rules' do
       next if node['netsh_firewall']['rule_whitelist'].include? rule['Rule Name']
       # Ignore rules in the resource collection
       next if resource_list.include? "netsh_firewall_rule[#{rule['Rule Name']}]"
-      r = Chef::Resource::NetshFirewallRule.new(rule['Rule Name'], run_context)
+      r = Chef::Resource.resource_for_node(:netsh_firewall_rule, node).new(rule['Rule Name'], run_context)
+      r.profiles rule['Profiles']
       r.run_action :disable
     end
   end

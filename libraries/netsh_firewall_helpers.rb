@@ -22,8 +22,7 @@ module NetshFirewall
     # Get an array of firewall rules that are enabled
     def parse_enabled_rules
       rules = []
-      cmd = Mixlib::ShellOut.new('netsh advfirewall firewall show rule name=all')
-      cmd.run_command
+      cmd = shell_out!('netsh advfirewall firewall show rule name=all')
       cmd.stdout.split("\r\n\r\n").each do |r|
         rule = {}
         r.lines("\r\n") do |line|

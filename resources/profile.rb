@@ -16,9 +16,67 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-actions :disable, :enable
-default_action :enable
+property :name, %w[all domain private public], name_property: true
+property :inbound, [:allow, :block], default: :block
+property :outbound, [:allow, :block], default: :allow
 
-attribute :name, kind_of: String, name_attribute: true, equal_to: %w[all domain private public]
-attribute :inbound, kind_of: Symbol, default: :block, equal_to: [:allow, :block]
-attribute :outbound, kind_of: Symbol, default: :allow, equal_to: [:allow, :block]
+action :enable do
+  unless profile_enabled?
+    shell_out!("netsh advfirewall set #{profile_name} state on")
+    new_resource.updated_by_last_action(true)
+  end
+
+  if policy_needs_update?
+    shell_out!("netsh advfirewall set #{profile_name} firewallpolicy #{firewall_policy}")
+    new_resource.updated_by_last_action(true)
+  end
+end
+
+action :disable do
+  if profile_enabled?
+    shell_out!("netsh advfirewall set #{profile_name} state off")
+    new_resource.updated_by_last_action(true)
+  end
+end
+
+def firewall_policy
+  "#{inbound}inbound,#{outbound}outbound"
+end
+
+def policy_needs_update?
+  if name == 'all'
+    profile_state('domainprofile')['Firewall Policy'] != firewall_policy ||
+      profile_state('privateprofile')['Firewall Policy'] != firewall_policy ||
+      profile_state('publicprofile')['Firewall Policy'] != firewall_policy
+  else
+    profile_state(profile_name)['Firewall Policy'] != firewall_policy
+  end
+end
+
+def profile_name
+  return 'allprofiles' if name == 'all'
+  "#{name}profile"
+end
+
+def profile_enabled?
+  if name == 'all'
+    profile_state('domainprofile')['State'] == 'on' &&
+      profile_state('privateprofile')['State'] == 'on' &&
+      profile_state('publicprofile')['State'] == 'on'
+  else
+    profile_state(profile_name)['State'] == 'on'
+  end
+end
+
+# Retrieve the state of the given profile and parse the output
+# Returned values are downcased to make things easier
+def profile_state(name)
+  state = {}
+  cmd = shell_out!("netsh advfirewall show #{name}")
+  cmd.stdout.lines("\r\n") do |line|
+    next if line.empty? || line =~ /^Ok/ || line =~ /^-/
+    k, v = line.split(/\s{2,}/)
+    state[k] = v.strip.downcase unless v.nil?
+  end
+  state
+end
